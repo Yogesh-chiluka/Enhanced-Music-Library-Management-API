@@ -4,11 +4,6 @@ import mongoose, { Schema } from 'mongoose'
 
 const albumSchema = new Schema({
 
-    _id: { 
-        type: Schema.Types.ObjectId, 
-        alias: 'album_id' 
-    },
-
     name:{
         type:String,
         require:true,

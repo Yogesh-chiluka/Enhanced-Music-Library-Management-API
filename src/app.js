@@ -20,13 +20,12 @@ app.use(express.static('public'));
 
 
 
-
 // Routes Import
-//import userRouter from './routes/user.routes.js'
+import userRouter from './routes/user.routes.js'
 
 // Routes Declaration
 
-//app.use('/api/v1/users', userRouter);
+app.use('/api/v1/users', userRouter);
 
 app.use('/', (req, res) => {
     res.send('<h1>Hello</h1>');

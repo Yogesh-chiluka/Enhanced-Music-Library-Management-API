@@ -19,7 +19,7 @@ const verifyEditor = asyncHandler(async (req, _,res) => {
     if(currentUser.role  === 'admin'){
         next();
     }else{
-        throw new ApiError(401,"Only admin can access resource/api");
+        throw new ApiError(401,"Only editor can access resource/api");
     }
     throw new ApiError(401,"Something went wrong while validating role");
 });

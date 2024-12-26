@@ -3,10 +3,7 @@ import mongoose, { Schema } from 'mongoose'
 
 
 const trackSchema = new Schema({
-    _id: { 
-        type: Schema.Types.ObjectId, 
-        alias: 'artist_id' 
-    },
+
     name:{
         type:String,
         require:true,

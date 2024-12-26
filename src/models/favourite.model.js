@@ -4,10 +4,6 @@ import mongoose, { Schema } from 'mongoose';
 
 const favouriteSchema = new Schema({
 
-    _id: { 
-        type: Schema.Types.ObjectId, 
-        alias: 'favourite_id' 
-    },
 
     category:{
         type:String,

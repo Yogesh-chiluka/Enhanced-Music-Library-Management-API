@@ -4,12 +4,18 @@ import bcrypt from 'bcrypt';
 
 const userSchema = new Schema({
 
+    _id: { 
+        type: Schema.Types.ObjectId, 
+        alias: 'user_id' 
+    },
+    
     email: {
         type: String,
         required: true,
         unique: true,
         trim: true,
-        index: true
+        index: true,
+        lowercase: true,
     },
     password:{
         type: String,

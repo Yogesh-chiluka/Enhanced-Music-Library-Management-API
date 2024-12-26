@@ -54,7 +54,7 @@ userSchema.method.generateAccessToken = function(){
 }
 
 
-userSchema.method.generateRefreshToken = function{
+userSchema.method.generateRefreshToken = function(){
 
     return JsonWebTokenError.sign(
         {

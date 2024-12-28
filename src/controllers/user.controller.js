@@ -1,78 +1,62 @@
 import { asyncHandler } from '../utils/asyncHandler.js'
-import { User } from '../models/user.model.js';
 import { ApiError } from '../utils/ApiError.js'
 import { ApiResponse } from '../utils/ApiResponse.js'
+import { 
+    createUser,
+    getUserById,
+    getUserByEmail,
+    validatePassword,
+    generateAccessAndRefreshTokens,
+    unsetRefreshToken,
+    getAllUsers,
+    deleteUserById,
+    updateUserPassword,
+ } from '../services/user.service.js';
 
 
-const generateAccessAndRefreshTokens = async(userId) =>{
-    try{
-        
-        const user= await User.findById(userId)
-       
-        const accessToken =  user.generateAccessToken()
-       
-        const refreshToken = user.generateRefreshToken()
-        
-        user.refreshtoken = refreshToken
-        await user.save({ validateBeforeSave: false })
-
-        return {accessToken,refreshToken}
-
-    }catch(error){
-       // console.log(error)
-        throw new ApiError(500,"Something went wrong while generating token")
-    }
-
-}   
+ import { 
+    validateEmailPasswordRoleFields,
+    validateEmailPasswordFields,
+    validateIdField,
+    validateOldNewPasswordFields,
+  } from '../validators/userValidation.js';
 
 const registerUser = asyncHandler(async (req,res) => {
 
-    const {email, password} = req.body
+    const { error, value } = validateEmailPasswordFields(req.body);
 
-
-    const user = await User.create({
-        email,
-        password,
-    })
-
-    const createdUser = await User.findById(user._id).select(
-        "-password -refreshtoken"
-    )
-
-    if(!createdUser){
-        throw new ApiError(500, "Something went wrong while registering the user")
+    if(error){
+        throw new ApiError(400, `Bad Request, Reason: ${error}.`)
     }
 
+    const user = await createUser(value.email, value.password);
+
+    const createdUser = await getUserById(user._id);
+
     return res.status(201).json(
-        new ApiResponse(201, createdUser, "User registered Successfully")
+        new ApiResponse(201, null , "User created successfully.")
     )
 })  
 
 const loginUser = asyncHandler(async (req,res) => {
     
-    const {email, username, password} = req.body
+    const { error, value } = validateEmailPasswordFields(req.body);
 
-    if(!(username || email)){
-        throw new ApiError(400,"Username or email is required")
+    if(error){
+        throw new ApiError(400, `Bad Request, Reason:${error}.`)
     }
 
-    const user = await User.findOne({
-        $or: [{username}, {email}]
-    })
-    if(!User){
-        throw new ApiError(404,"User dosen't exist")
+    const user = await getUserByEmail(value.email);
+
+    if(!user){
+        throw new ApiError(404, `User not found.`)
     }
 
-    const isPasswordValid = await user.isPasswordCorrect(password)
+    const validPassword = await validatePassword(user,value.password);
 
-    if(!isPasswordValid){
-        throw new ApiError(401,"Invalid user credentials")
-    }
-    //console.log("start generatig token ---------------------------")
-    const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id)
+    const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
     
-
-    const loggedInUser = await User.findById(user._id).select("-password -refreshtoken")
+    const loggedInUser = await getUserById(user._id);
 
     const options = {
         httpOnly: true,
@@ -87,16 +71,128 @@ const loginUser = asyncHandler(async (req,res) => {
         new ApiResponse(
             200,
             {
-                user: loggedInUser, accessToken, refreshToken
+                "token": loggedInUser.refreshToken,
             },
-            "User logged In Successfully"
+            "Login successful."
         )
     )
 
 })
 
 
+const logoutUser = asyncHandler(async(req,res) => {
+
+
+    const user = await getUserById(req.user._id);
+
+    if(!user){
+        throw new ApiError(400,'Bad Request.')
+    }
+
+    await unsetRefreshToken(user._id);
+
+    const options = {
+        httpOnly: true,
+        secure: true    
+    }
+
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken",options)
+    .json(
+        new ApiResponse(200, null, "User logged out successfully.")
+    )
+})
+
+const getUsers = asyncHandler(async(req,res)=>{
+
+    const { offset = 0, limit = 5, role } = req.query;
+
+    const roleToUppercase = role.toUpperCase();
+
+    if (role && !(roleToUppercase === 'EDITOR' || roleToUppercase === 'VIEWER')) {
+        throw new ApiError(400, "Bad Request, Role can be only Editor or Viewer")
+    } 
+
+    const allUsers = await getAllUsers(offset,limit,roleToUppercase).catch( (err)=>{
+        throw new ApiError(400, err.message)
+    })
+
+    return res.status(200).json(
+        new ApiResponse(200, allUsers.docs, "Users retrieved successfully.")
+    )
+
+})
+
+const addUser = asyncHandler(async(req,res)=>{
+
+    const { error, value } = validateEmailPasswordRoleFields(req.body);
+
+    if(error){
+        throw new ApiError(400, `Bad Request, Reason: ${error}.`)
+    }
+
+    const user = await createUser(value.email, value.password);
+
+    const createdUser = await getUserById(user._id);
+
+    return res.status(201).json(
+        new ApiResponse(201, null , "User created successfully.")
+    )
+})
+
+
+const deleteUser = asyncHandler(async(req,res)=>{
+
+    const userId = req.params.id;
+    
+    const { error } = validateIdField(userId);
+
+    if(error){
+        throw new ApiError(400, `${error}.`)
+    }
+
+    await deleteUserById(userId);
+
+    return res.status(200).json(
+        new ApiResponse(200, null , "User deleted successfully.")
+    )
+    
+})
+
+const updatePassword = asyncHandler(async(req,res)=>{
+
+    //old_password
+    //new_password
+    const { error, value } = validateOldNewPasswordFields(req.body);
+
+    if(error){
+        throw new ApiError(400, `Bad Request, Reason:${error}.`)
+    }
+
+    const user = await updateUserPassword(req.user._id, value.old_password, value.new_password);
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                user,
+            },
+            "Password updated successfully"
+        )
+    )
+})
+
+
 export{
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser,
+    getUsers,
+    addUser,
+    deleteUser,
+    updatePassword,
 }

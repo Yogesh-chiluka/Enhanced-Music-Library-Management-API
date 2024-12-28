@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 
-const favouriteSchema = new Schema({
+const favoriteSchema = new Schema({
 
 
     category:{
@@ -16,7 +16,7 @@ const favouriteSchema = new Schema({
         require:true
     },
     
-    Owner:{ 
+    owner:{ 
         type: Schema.Types.ObjectId, 
         ref:'User'
     },
@@ -25,16 +25,15 @@ const favouriteSchema = new Schema({
     timestamps:true
 })
 
-
-favouriteSchema.plugin(mongooseAggregatePaginate);
-export const Favourite = mongoose.model('Favourite',favouriteSchema);
+favoriteSchema.plugin(mongooseAggregatePaginate);
+export const Favorite = mongoose.model('Favorite',favoriteSchema);
 
 
 
 /*
 Scalabel schema
 
-const favouriteSchema = new Schema({
+const favoriteSchema = new Schema({
 
     category:{
         track:[

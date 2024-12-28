@@ -26,7 +26,7 @@ import userRouter from './routes/user.routes.js'
 import artistRouter from './routes/artist.routes.js'
 import albumRouter from './routes/album.routes.js'
 import trackRouter from './routes/track.routes.js'
-import favoriteRouter from './routes/favourite.routes.js'
+import favoriteRouter from './routes/favorite.routes.js'
 
 
 

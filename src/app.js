@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-
+import cookieParser from "cookie-parser";
+import { errorHandler } from './utils/errorHandler.js'
 const app = express();
 
 app.use(cors({
@@ -16,7 +17,7 @@ app.use(express.urlencoded({extended:true, limit:'16kb'}));
 
 app.use(express.static('public'));
 
-//app.use(cookieParser());
+app.use(cookieParser());
 
 
 
@@ -25,14 +26,11 @@ import userRouter from './routes/user.routes.js'
 
 // Routes Declaration
 
-app.use('/api/v1/users', userRouter);
-
-app.use('/', (req, res) => {
-    res.send('<h1>Hello</h1>');
-});
+app.use('/api/v1', userRouter);
 
 
 
+app.use(errorHandler);
 
 
 

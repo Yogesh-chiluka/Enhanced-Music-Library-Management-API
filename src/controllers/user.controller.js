@@ -21,7 +21,7 @@ import {
     validateOldNewPasswordFields,
   } from '../validators/userValidation.js';
 
-const registerUser = asyncHandler(async (req,res) => {
+const registerUserController = asyncHandler(async (req,res) => {
 
     const { error, value } = validateEmailPasswordFields(req.body);
 
@@ -38,7 +38,7 @@ const registerUser = asyncHandler(async (req,res) => {
     )
 })  
 
-const loginUser = asyncHandler(async (req,res) => {
+const loginUserController = asyncHandler(async (req,res) => {
     
     const { error, value } = validateEmailPasswordFields(req.body);
 
@@ -80,7 +80,7 @@ const loginUser = asyncHandler(async (req,res) => {
 })
 
 
-const logoutUser = asyncHandler(async(req,res) => {
+const logoutUserController = asyncHandler(async(req,res) => {
 
 
     const user = await getUserById(req.user._id);
@@ -105,13 +105,13 @@ const logoutUser = asyncHandler(async(req,res) => {
     )
 })
 
-const getUsers = asyncHandler(async(req,res)=>{
+const getUsersController = asyncHandler(async(req,res)=>{
 
     const { offset = 0, limit = 5, role } = req.query;
 
-    const roleToUppercase = role.toUpperCase();
+    const roleToUppercase = role?.toUpperCase();
 
-    if (role && !(roleToUppercase === 'EDITOR' || roleToUppercase === 'VIEWER')) {
+    if (roleToUppercase && !(roleToUppercase === 'EDITOR' || roleToUppercase === 'VIEWER')) {
         throw new ApiError(400, "Bad Request, Role can be only Editor or Viewer")
     } 
 
@@ -125,7 +125,7 @@ const getUsers = asyncHandler(async(req,res)=>{
 
 })
 
-const addUser = asyncHandler(async(req,res)=>{
+const addUserController = asyncHandler(async(req,res)=>{
 
     const { error, value } = validateEmailPasswordRoleFields(req.body);
 
@@ -143,7 +143,7 @@ const addUser = asyncHandler(async(req,res)=>{
 })
 
 
-const deleteUser = asyncHandler(async(req,res)=>{
+const deleteUserController = asyncHandler(async(req,res)=>{
 
     const userId = req.params.id;
     
@@ -161,7 +161,7 @@ const deleteUser = asyncHandler(async(req,res)=>{
     
 })
 
-const updatePassword = asyncHandler(async(req,res)=>{
+const updatePasswordController = asyncHandler(async(req,res)=>{
 
     //old_password
     //new_password
@@ -188,11 +188,11 @@ const updatePassword = asyncHandler(async(req,res)=>{
 
 
 export{
-    registerUser,
-    loginUser,
-    logoutUser,
-    getUsers,
-    addUser,
-    deleteUser,
-    updatePassword,
+    registerUserController,
+    loginUserController,
+    logoutUserController,
+    getUsersController,
+    addUserController,
+    deleteUserController,
+    updatePasswordController,
 }

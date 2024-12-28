@@ -2,31 +2,31 @@ import { Router } from "express";
 import { verifyJWT } from '../middlewares/authentication.middleware.js'
 import { verifyAdmin, verifyEditor, verifyViewer } from '../middlewares/authorization.middleware.js'
 import { 
-    registerUser,
-    loginUser,
-    logoutUser,
-    getUsers,
-    addUser,
-    deleteUser,
-    updatePassword,
+    registerUserController,
+    loginUserController,
+    logoutUserController,
+    getUsersController,
+    addUserController,
+    deleteUserController,
+    updatePasswordController,
  } from '../controllers/user.controller.js'
 
 const router = Router();
 
 
-router.route('/login').post(loginUser)
+router.route('/login').post(loginUserController)
 
-router.route('/signup').post(registerUser)
+router.route('/signup').post(registerUserController)
 
-router.route('/Logout').get(verifyJWT,logoutUser)
+router.route('/Logout').get(verifyJWT,logoutUserController)
 
-router.route('/users').get(verifyJWT,verifyAdmin,getUsers)
+router.route('/users').get(verifyJWT,verifyAdmin,getUsersController)
 
-router.route('/users/add-user').post(verifyJWT,verifyAdmin,addUser)
+router.route('/users/add-user').post(verifyJWT,verifyAdmin,addUserController)
 
-router.route('/users/:id').delete(verifyJWT,verifyAdmin,deleteUser)
+router.route('/users/:id').delete(verifyJWT,verifyAdmin,deleteUserController)
 
-router.route('/users/update-password').put(verifyJWT,updatePassword)
+router.route('/users/update-password').put(verifyJWT,updatePasswordController)
 
 
 

@@ -4,8 +4,8 @@ import { isValidObjectId } from "mongoose"
 const validateGrammyVisibility = (data) => {
 
     const schema = Joi.object({
-        Grammy: Joi.number().required().optional(),
-        Visibility: Joi.boolean().required().optional(),
+        Grammy: Joi.number().optional(),
+        Visibility: Joi.boolean().optional(),
         offset: Joi.number().default(0),
         limit: Joi.number().default(5),
     })

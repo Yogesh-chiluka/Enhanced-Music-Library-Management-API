@@ -1,6 +1,7 @@
 import mongoose, { Schema, } from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt, { hash } from "bcrypt"
 import jwt from "jsonwebtoken"
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
     const userSchema = new Schema({
         
@@ -27,13 +28,15 @@ import jwt from "jsonwebtoken"
     },
     {
         timestamps:true
-    })
+    });
 
-userSchema.pre('save',async function(next){
-    if(!this.isModified("password")) return next();
-    this.password = await bcrypt.hash(this.password,10);
-    next()
-})
+userSchema.pre('save', async function(next) { 
+    if (this.isModified('password')) 
+    { 
+        this.password = await bcrypt.hash(this.password, 10); 
+    } 
+    next(); 
+});
 
 userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
@@ -68,6 +71,6 @@ userSchema.methods.generateRefreshToken = function(){
         }
     )
 }
-
+userSchema.plugin(mongooseAggregatePaginate);
 export const User = mongoose.model('User', userSchema);
 

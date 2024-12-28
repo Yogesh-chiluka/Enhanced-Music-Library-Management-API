@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 
 const favouriteSchema = new Schema({
@@ -26,7 +26,7 @@ const favouriteSchema = new Schema({
 })
 
 
-
+favouriteSchema.plugin(mongooseAggregatePaginate);
 export const Favourite = mongoose.model('Favourite',favouriteSchema);
 
 

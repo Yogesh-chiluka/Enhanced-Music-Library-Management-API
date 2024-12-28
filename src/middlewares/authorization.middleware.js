@@ -1,38 +1,38 @@
 import { ApiError } from '../utils/ApiError.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
-import { User } from '../models/user.model.js'
+import { getUserById } from '../services/user.service.js'
 
-const verifyAdmin = asyncHandler(async (req, _,res) => {
+const verifyAdmin = asyncHandler(async (req, _,next) => {
+    
+    const currentUser = await getUserById(req.user._id);
 
-    const currentUser = await User.findById(req.user._id);
-
-    if(currentUser.role  === 'admin'){
-        next();
+    if(currentUser.role  === 'ADMIN'){
+        next()
     }else{
-        throw new ApiError(401,"Only admin can access resource/api");
+        throw new ApiError(401,"Forbidden Access/Operation not allowed.");
     }
-    throw new ApiError(401,"Something went wrong while validating role");
 });
-const verifyEditor = asyncHandler(async (req, _,res) => {
-    const currentUser = await User.findById(req.user._id);
+const verifyEditor = asyncHandler(async (req, _,next) => {
 
-    if(currentUser.role  === 'admin'){
+    const currentUser = await getUserById(req.user._id);
+
+    if(currentUser.role  === 'EDITOR'){
         next();
     }else{
-        throw new ApiError(401,"Only editor can access resource/api");
+        throw new ApiError(401,"Forbidden Access/Operation not allowed.");
     }
-    throw new ApiError(401,"Something went wrong while validating role");
+
 });
 
-const verifyViewer = asyncHandler(async (req, _,res) => {
-    const currentUser = await User.findById(req.user._id);
+const verifyViewer = asyncHandler(async (req, _,next) => {
+    const currentUser = await getUserById(req.user._id);
 
-    if(currentUser.role  === 'admin'){
+    if(currentUser.role  === 'VIEWER'){
         next();
     }else{
-        throw new ApiError(401,"Only admin can access resource/api");
+        throw new ApiError(401,"Forbidden Access/Operation not allowed.");
     }
-    throw new ApiError(401,"Something went wrong while validating role");
+
 });
 
 

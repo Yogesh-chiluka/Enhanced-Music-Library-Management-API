@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
-
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 
 const trackSchema = new Schema({
@@ -33,5 +33,5 @@ const trackSchema = new Schema({
 })
 
 
-
+trackSchema.plugin(mongooseAggregatePaginate);
 export const Track = mongoose.model('Track',trackSchema);

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
-
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 
 const albumSchema = new Schema({
@@ -28,5 +28,5 @@ const albumSchema = new Schema({
 })
 
 
-
+albumSchema.plugin(mongooseAggregatePaginate);
 export const Album = mongoose.model('Album',albumSchema);

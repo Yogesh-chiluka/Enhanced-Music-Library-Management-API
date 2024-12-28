@@ -1,8 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
-
-const tackSchema = new Schema({
+const artistSchema = new Schema({
 
     name:{
         type:String,
@@ -24,6 +23,5 @@ const tackSchema = new Schema({
 })
 
 
-
-tackSchema.plugin(mongooseAggregatePaginate);
-export const Track = mongoose.model('Track',tackSchema);
+artistSchema.plugin(mongooseAggregatePaginate);
+export const Artist = mongoose.model('Artist',artistSchema);

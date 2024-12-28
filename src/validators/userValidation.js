@@ -24,7 +24,7 @@ const validateIdField = (userId) => {
   if (error || !isValidObjectId(userId) ) {
     return { error: "Bad Request, Reason: Invalid user id", value: null };
   }
-  return { error: null, value: userId };
+  return { error: null, value:{userId} };
 };
 
 const roles = [

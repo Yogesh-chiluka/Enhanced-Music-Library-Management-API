@@ -145,15 +145,13 @@ const addUserController = asyncHandler(async(req,res)=>{
 
 const deleteUserController = asyncHandler(async(req,res)=>{
 
-    const userId = req.params.id;
-    
-    const { error } = validateIdField(userId);
+    const { error, value } = validateIdField(req.params?.id);
 
     if(error){
         throw new ApiError(400, `${error}.`)
     }
 
-    await deleteUserById(userId);
+    await deleteUserById(value.userId);
 
     return res.status(200).json(
         new ApiResponse(200, null , "User deleted successfully.")

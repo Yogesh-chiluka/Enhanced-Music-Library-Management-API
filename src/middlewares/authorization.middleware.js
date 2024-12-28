@@ -16,7 +16,7 @@ const verifyEditor = asyncHandler(async (req, _,next) => {
 
     const currentUser = await getUserById(req.user._id);
 
-    if(currentUser.role  === 'EDITOR'){
+    if(currentUser.role  === 'EDITOR' || currentUser.role  === 'ADMIN'){
         next();
     }else{
         throw new ApiError(401,"Forbidden Access/Operation not allowed.");
@@ -27,7 +27,7 @@ const verifyEditor = asyncHandler(async (req, _,next) => {
 const verifyViewer = asyncHandler(async (req, _,next) => {
     const currentUser = await getUserById(req.user._id);
 
-    if(currentUser.role  === 'VIEWER'){
+    if(currentUser.role  === 'VIEWER' || currentUser.role  === 'EDITOR' || currentUser.role  === 'ADMIN'){
         next();
     }else{
         throw new ApiError(401,"Forbidden Access/Operation not allowed.");

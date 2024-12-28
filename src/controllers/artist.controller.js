@@ -11,7 +11,7 @@ import {
 } from '../services/artist.service.js'
 
 import { 
-    validateGrammyVisibility,
+    validateGrammyHidden,
     validateNameGrammyHidden,
     validateIdField,
 
@@ -19,13 +19,13 @@ import {
 
 const getAllArtistsController = asyncHandler(async (req,res) => {
 
-    const { error, value } = validateGrammyVisibility(req.query);
+    const { error, value } = validateGrammyHidden(req.query);
 
     if( error ){
         throw new ApiError(400, `Bad Request, Reason: ${error}`)
     }
 
-    const allArtists = await getAllArtists( value.grammy, value.visibility, value.offset, value.limit).catch( (err)=>{
+    const allArtists = await getAllArtists( value.grammy, value.hidden, value.offset, value.limit).catch( (err)=>{
         throw new ApiError(400, err.message)
     })
 

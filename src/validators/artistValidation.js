@@ -1,11 +1,11 @@
 import Joi from 'joi';
 import { isValidObjectId } from "mongoose"
 
-const validateGrammyVisibility = (data) => {
+const validateGrammyHidden = (data) => {
 
     const schema = Joi.object({
         grammy: Joi.number().optional(),
-        visibility: Joi.boolean().optional(),
+        hidden: Joi.boolean().optional(),
         offset: Joi.number().default(0),
         limit: Joi.number().default(5),
     })
@@ -39,7 +39,7 @@ const validateNameGrammyHidden = (data) => {
 };
 
 export{
-    validateGrammyVisibility,
+    validateGrammyHidden,
     validateIdField,
     validateNameGrammyHidden
 }

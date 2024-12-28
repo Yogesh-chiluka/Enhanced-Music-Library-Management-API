@@ -1,7 +1,7 @@
 import { ApiError } from '../utils/ApiError.js'
 import { Artist } from '../models/artist.model.js'
 
-const createArtist = async(name, grammy, visibility) => {
+const createArtist = async(name, grammy, hidden) => {
 
     // const artistExist = await getArtistById(email);
     // if(artistExist){
@@ -11,7 +11,7 @@ const createArtist = async(name, grammy, visibility) => {
     const artist = await Artist.create({
             name,
             grammy,
-            hidden:visibility,
+            hidden,
     })
 
     if(!artist){
@@ -28,7 +28,7 @@ const getArtistById = async(artistId) => {
     return artist;
 }
 
-const getAllArtists = async (grammy, visibility, offset, limit) => {
+const getAllArtists = async (grammy, hidden, offset, limit) => {
 
     const pipeline = [];
 
@@ -43,7 +43,7 @@ const getAllArtists = async (grammy, visibility, offset, limit) => {
     if (visibility) {
         pipeline.push({
             $match: {
-                hidden: visibility
+                hidden: hidden
             }
         });
     }
@@ -83,7 +83,7 @@ const deleteArtistById = async(artistId) =>{
     await Artist.findByIdAndDelete(artistId);
 };
 
-const updateArtistById = async(artistId, name, grammy, visibility) =>{
+const updateArtistById = async(artistId, name, grammy, hidden) =>{
     
     const artist = await getArtistById(artistId);
     
@@ -96,7 +96,7 @@ const updateArtistById = async(artistId, name, grammy, visibility) =>{
         {
             name,
             grammy,
-            hidden:visibility
+            hidden
         },
         {new: true}
     )

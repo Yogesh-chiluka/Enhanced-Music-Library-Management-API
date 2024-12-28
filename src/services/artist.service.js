@@ -40,7 +40,7 @@ const getAllArtists = async (grammy, hidden, offset, limit) => {
         });
     }
 
-    if (visibility) {
+    if (hidden) {
         pipeline.push({
             $match: {
                 hidden: hidden

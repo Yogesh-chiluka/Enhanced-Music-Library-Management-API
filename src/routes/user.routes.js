@@ -13,7 +13,6 @@ import {
 
 const router = Router();
 
-
 router.route('/login').post(loginUserController)
 
 router.route('/signup').post(registerUserController)

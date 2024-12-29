@@ -29,7 +29,7 @@ const validateIdField = (id) => {
   const { error } = schema.validate({ id });
 
   if (error || !isValidObjectId(id) ) {
-    return { error: "Bad Request, Reason: Invalid user id", value: null };
+    return { error: "Bad Request, Reason: Invalid album id", value: null };
   }
   return { error: null, value: { id } };
 };
@@ -55,10 +55,21 @@ const validateArtistHidden = (data) => {
   return { error, value };
 };
 
+const validateUpdateAlbumFields = (data) => {
+
+  const schema = Joi.object({
+    name: Joi.string().optional(),
+    year: Joi.number().integer().min(1900).max(2100).optional(),
+    hidden: Joi.boolean().optional(),
+  }).or('name', 'year', 'hidden');
+
+  return schema.validate(data);
+};
 export{
   validateArtistHiddenArtistId,
   validateIdField,
-  validateArtistHidden
+  validateArtistHidden,
+  validateUpdateAlbumFields
 }
 
 

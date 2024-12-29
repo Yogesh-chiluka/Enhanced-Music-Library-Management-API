@@ -12,15 +12,15 @@ import {
 
 const router = Router();
 
-router.route('').get(verifyJWT,verifyAdmin,verifyEditor,getAllAlbumsController);
+router.route('').get(verifyJWT,getAllAlbumsController);
 
-router.route('/:id').get(verifyJWT,verifyAdmin,verifyEditor,getAlbumByIdController);
+router.route('/:id').get(verifyJWT,getAlbumByIdController);
 
-router.route('/add-album').post(verifyJWT,verifyAdmin,verifyEditor,addAlbumController);
+router.route('/add-album').post(verifyJWT,verifyEditor,addAlbumController);
 
-router.route('/:id').put(verifyJWT,verifyAdmin,verifyEditor,updateAlbumByIdController);
+router.route('/:id').put(verifyJWT,verifyEditor,updateAlbumByIdController);
 
-router.route('/:id').delete(verifyJWT,verifyAdmin,verifyEditor,deleteAlbumByIdController);
+router.route('/:id').delete(verifyJWT,verifyEditor,deleteAlbumByIdController);
 
 
 export default router

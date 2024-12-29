@@ -126,22 +126,18 @@ const createAlbum = async( artist_id, name, year, hidden) => {
     return album;
 }
 
-const updateAlbumById = async(albumId, name, grammy) => {
+const updateAlbumById = async(albumId, options) => {
     
     const album = await getAlbumById(albumId);
         
     if(!album) {
         throw new ApiError(404,'Album not found.');
     }
-    
+
     const updatedAlbum = await Album.findByIdAndUpdate
     (
-        album._id,
-        {
-            name,
-            grammy,
-            hidden
-        },
+        albumId,
+        options,
         {new: true}
     )
     

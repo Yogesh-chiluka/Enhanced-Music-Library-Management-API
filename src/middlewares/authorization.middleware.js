@@ -9,7 +9,7 @@ const verifyAdmin = asyncHandler(async (req, _,next) => {
     if(currentUser.role  === 'ADMIN'){
         next()
     }else{
-        throw new ApiError(401,"Forbidden Access/Operation not allowed.");
+        throw new ApiError(403,"Forbidden Access/Operation not allowed.");
     }
 });
 const verifyEditor = asyncHandler(async (req, _,next) => {
@@ -19,7 +19,7 @@ const verifyEditor = asyncHandler(async (req, _,next) => {
     if(currentUser.role  === 'EDITOR' || currentUser.role  === 'ADMIN'){
         next();
     }else{
-        throw new ApiError(401,"Forbidden Access/Operation not allowed.");
+        throw new ApiError(403,"Forbidden Access/Operation not allowed.");
     }
 
 });
@@ -30,7 +30,7 @@ const verifyViewer = asyncHandler(async (req, _,next) => {
     if(currentUser.role  === 'VIEWER' || currentUser.role  === 'EDITOR' || currentUser.role  === 'ADMIN'){
         next();
     }else{
-        throw new ApiError(401,"Forbidden Access/Operation not allowed.");
+        throw new ApiError(403,"Forbidden Access/Operation not allowed.");
     }
 
 });

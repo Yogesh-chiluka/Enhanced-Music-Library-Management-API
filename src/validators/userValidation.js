@@ -59,11 +59,27 @@ const validateOldNewPasswordFields = (data) =>
         return schema.validate(data);
     }
 
+const validateFilterFields = (data) => 
+    {
+    
+        const schema = Joi.object({
+            role: Joi.string().valid(...roles).optional(),
+            offset: Joi.number().default(0).optional(),
+            limit: Joi.number().default(5).optional(),
+        })
+    
+    if(data.role){
+        data.role = data.role.toUpperCase();
+    }  
+    return schema.validate(data);
+}
+
 
 export{
     validateEmailPasswordRoleFields,
     validateEmailPasswordFields,
     validateIdField,
     validateOldNewPasswordFields,
+    validateFilterFields
 
 }

@@ -19,12 +19,15 @@ import {
     validateEmailPasswordFields,
     validateIdField,
     validateOldNewPasswordFields,
+    validateFilterFields
   } from '../validators/userValidation.js';
 
 const registerUserController = asyncHandler(async (req,res) => {
+    
 
     const { error, value } = validateEmailPasswordFields(req.body);
 
+    
     if(error){
         throw new ApiError(400, `Bad Request, Reason: ${error}.`)
     }
@@ -107,15 +110,14 @@ const logoutUserController = asyncHandler(async(req,res) => {
 
 const getUsersController = asyncHandler(async(req,res)=>{
 
-    const { offset = 0, limit = 5, role } = req.query;
 
-    const roleToUppercase = role?.toUpperCase();
+    const { error, value } = validateFilterFields(req.query);
 
-    if (roleToUppercase && !(roleToUppercase === 'EDITOR' || roleToUppercase === 'VIEWER')) {
-        throw new ApiError(400, "Bad Request, Role can be only Editor or Viewer")
-    } 
+    if(error){
+        throw new ApiError(400, `Bad Request, Reason: ${error}.`)
+    }
 
-    const allUsers = await getAllUsers(offset,limit,roleToUppercase).catch( (err)=>{
+    const allUsers = await getAllUsers(value.offset, value.limit, value.role).catch( (err)=>{
         throw new ApiError(400, err.message)
     })
 
@@ -133,7 +135,7 @@ const addUserController = asyncHandler(async(req,res)=>{
         throw new ApiError(400, `Bad Request, Reason: ${error}.`)
     }
 
-    const user = await createUser(value.email, value.password);
+    const user = await createUser(value.email, value.password, value.role);
 
     const createdUser = await getUserById(user._id);
 
@@ -168,11 +170,20 @@ const updatePasswordController = asyncHandler(async(req,res)=>{
     if(error){
         throw new ApiError(400, `Bad Request, Reason:${error}.`)
     }
-
+    //newPassword
     const user = await updateUserPassword(req.user._id, value.old_password, value.new_password);
+
+    await unsetRefreshToken(user._id);
+
+    const options = {
+        httpOnly: true,
+        secure: true    
+    }
 
     return res
     .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken",options)
     .json(
         new ApiResponse(
             200,

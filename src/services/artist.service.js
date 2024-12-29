@@ -3,11 +3,6 @@ import { Artist } from '../models/artist.model.js'
 
 const createArtist = async(name, grammy, hidden) => {
 
-    // const artistExist = await getArtistById(email);
-    // if(artistExist){
-    //     throw new ApiError(409,"Email already exists.")
-    // }
-
     const artist = await Artist.create({
             name,
             grammy,

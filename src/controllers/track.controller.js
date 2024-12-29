@@ -1,6 +1,7 @@
 import { ApiError } from '../utils/ApiError.js'
 import { ApiResponse } from '../utils/ApiResponse.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
+import { isValidObjectId } from "mongoose"
 
 import {
     getAllTracks,
@@ -19,7 +20,13 @@ import {
 
 } from '../validators/trackValidation.js'
 
+import {
+    getArtistById,
+} from '../services/artist.service.js'
 
+import {
+    getAlbumById,
+} from '../services/album.service.js'
 //check
 const getAllTracksController = asyncHandler(async (req,res) => {
 
@@ -29,7 +36,32 @@ const getAllTracksController = asyncHandler(async (req,res) => {
         throw new ApiError(400, `Bad Request, Reason: ${error}`)
     }
 
-    const allTracks = await getAllTracks( value.artist_id, value.hidden, value.offset, value.limit).catch( (err)=>{
+    
+    if(value.artist_id){
+
+        if(!isValidObjectId(value.artist_id)){
+            throw new ApiError(404, `Bad Request, Reason: Invalid Id Field.`)
+        }
+        const artist = await getArtistById(value.artist_id);
+
+        if(!artist){
+            throw new ApiError(404, `Artist Doesn't Exist.`)
+        }
+    }
+
+    if(value.album_id){
+        
+        if(!isValidObjectId(value.album_id)){
+            throw new ApiError(404, `Bad Request, Reason: Invalid Id Field.`)
+        }
+        const album = await getAlbumById(value.album_id);
+
+        if(!album[0]){
+            throw new ApiError(404, `Album Doesn't Exist.`)
+        }
+    }
+
+    const allTracks = await getAllTracks( value.artist_id, value.album_id, value.hidden, value.offset, value.limit).catch( (err)=>{
         throw new ApiError(400, err.message)
     })
 
@@ -47,19 +79,46 @@ const getTrackByIdController = asyncHandler(async (req,res) => {
     }
    
     const track = await getTrackById(value.id);
+
+    if(!track){
+        throw new ApiError(404,`Resource Doesn't Exist.`)
+    }
     
     return res.status(200).json(
-        new ApiResponse(200, track, "Tracks retrieved successfully.")
+        new ApiResponse(200, track, "Track retrieved successfully.")
     )
 })  
 
 const addTrackController = asyncHandler(async (req,res) => {
     
     const { error, value } = validateAddTrackFields(req.body);
+
+    
     
     if(error){
         throw new ApiError(400, `Bad Request, Reason: ${error}.`)
     }
+
+    const artist = await getArtistById(value.artist_id);
+
+    if(!artist){
+        throw new ApiError(404, `Resource Doesn't Exist.`)
+    }
+
+    const album = await getAlbumById(value.album_id);
+
+    if(!album[0]){
+        throw new ApiError(404, `Resource Doesn't Exist.`)
+    }
+    
+
+    // if(error){
+    //     throw new ApiError(400, `Bad Request, Reason: ${error}.`)
+    // }
+
+    // if(error){
+    //     throw new ApiError(400, `Bad Request, Reason: ${error}.`)
+    // }
 
     const track = await createTrack( value.artist_id, value.album_id, value.name, value.duration, value.hidden);
     
@@ -101,7 +160,7 @@ const deleteTrackByIdController = asyncHandler(async (req,res) => {
 
     
     return res.status(200).json(
-        new ApiResponse(200, null , `Track: ${track[0].name} deleted successfully.`)
+        new ApiResponse(200, null , `Track: ${track.name} deleted successfully.`)
     )
 })  
 

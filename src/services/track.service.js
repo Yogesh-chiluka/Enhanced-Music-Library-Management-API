@@ -20,7 +20,7 @@ const getAllTracks = async(artist_id, album_id, hidden, offset, limit) => {
         if (album_id) {
             pipeline.push({
                 $match: {
-                    artist: new mongoose.Types.ObjectId(album_id)
+                    album: new mongoose.Types.ObjectId(album_id)
                 }
             })
         }
@@ -97,7 +97,6 @@ const getAllTracks = async(artist_id, album_id, hidden, offset, limit) => {
 
 const getTrackById = async(trackId) => {
     
-    //const track = await Track.findById(trackId);
 
     const pipeline = [{
             $match: {
@@ -196,12 +195,12 @@ const updateTrackById = async(trackId, update) => {
 const deleteTrackById = async(trackId) => {
     
     const track = await getTrackById(trackId);
-    //console.log(track)
-    if(!track[0]){
+    console.log(track)
+    if(!track){
         throw new ApiError(404, 'Track not found');
     }
 
-    await Track.findByIdAndDelete(track[0].track_id);
+    await Track.findByIdAndDelete(trackId);
     
     return track;
 }

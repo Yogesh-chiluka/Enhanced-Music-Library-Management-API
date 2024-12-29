@@ -12,15 +12,15 @@ import {
 
 const router = Router();
 
-router.route('').get(verifyJWT,verifyAdmin,verifyEditor,getAllTracksController);
+router.route('').get(verifyJWT,getAllTracksController);
 
-router.route('/:id').get(verifyJWT,verifyAdmin,verifyEditor,getTrackByIdController);
+router.route('/:id').get(verifyJWT,getTrackByIdController);
 
-router.route('/add-track').post(verifyJWT,verifyAdmin,verifyEditor,addTrackController);
+router.route('/add-track').post(verifyJWT,verifyEditor,addTrackController);
 
-router.route('/:id').put(verifyJWT,verifyAdmin,verifyEditor,updateTrackByIdController);
+router.route('/:id').put(verifyJWT,verifyEditor,updateTrackByIdController);
 
-router.route('/:id').delete(verifyJWT,verifyAdmin,verifyEditor,deleteTrackByIdController);
+router.route('/:id').delete(verifyJWT,verifyEditor,deleteTrackByIdController);
 
 
 export default router

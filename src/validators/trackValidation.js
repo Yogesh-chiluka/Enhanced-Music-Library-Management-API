@@ -12,18 +12,13 @@ const validateAddTrackFields = (data) => {
       hidden: Joi.boolean().required(),
     })
 
-    const { error, value } = schema.validate(data);
-
-    if (error || !isValidObjectId(value.album_id) || !isValidObjectId(value.artist_id)) {
-      return { error: `Bad Request, Reason: Invalid ObjectId`, value: null };
-    }
-
-  return { error, value };
+  return schema.validate(data);
 }
 
 const validateFilterFields = (data) => {
 
   const schema = Joi.object({
+    album_id: Joi.string().optional(),
     artist_id: Joi.string().optional(),
     hidden: Joi.boolean().optional(),
     offset: Joi.number().default(0),
@@ -45,6 +40,7 @@ const validateUpdateFields = (data) => {
 }
 
 
+
 const validateIdField = (id) => {
 
   const schema = Joi.object({
@@ -54,11 +50,10 @@ const validateIdField = (id) => {
   const { error } = schema.validate({ id });
 
   if (error || !isValidObjectId(id) ) {
-    return { error: "Bad Request, Reason: Invalid user id", value: null };
+    return { error: "Invalid track id", value: null };
   }
   return { error: null, value: { id } };
 };
-
 
 const validateArtistHidden = (data) => {
 

@@ -44,6 +44,10 @@ const getArtistByIdController = asyncHandler(async (req,res) => {
    
     const artist = await getArtistById(value.artistId);
 
+    if(!artist) {
+        throw new ApiError(404,'Artist not found.')
+    } 
+
     const transformedArtist =  { 
         artist_id: artist._id, 
         name: artist.name, 
@@ -82,7 +86,7 @@ const updateArtistByIdController = asyncHandler(async (req,res) => {
 
     if(idValidation.error || bodyValidation.error){
         const error = idValidation.error ? idValidation.error : bodyValidation.error;
-        throw new ApiError(400, `Bad Request, Reason: ${error}.`)
+        throw new ApiError(400, `${error}.`)
     }
   
     const artist = await updateArtistById
@@ -103,7 +107,7 @@ const deleteArtistByIdController = asyncHandler(async (req,res) => {
     const { error, value } = validateIdField(req.params.id);
 
     if(error){
-        throw new ApiError(400, `Bad Request, Reason: ${error}.`)
+        throw new ApiError(400, `${error}.`)
     }
 
     await deleteArtistById(value.artistId);

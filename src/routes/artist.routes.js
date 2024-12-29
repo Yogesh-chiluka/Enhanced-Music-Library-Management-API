@@ -14,11 +14,11 @@ router.route('').get(verifyJWT,getAllArtistsController);
 
 router.route('/:id').get(verifyJWT,getArtistByIdController)
 
-router.route('/add-artist').post(verifyJWT,verifyAdmin,verifyEditor,addArtistController)
+router.route('/add-artist').post(verifyJWT,verifyEditor,addArtistController)
 
-router.route('/:id').put(verifyJWT,verifyAdmin,verifyEditor,updateArtistByIdController)
+router.route('/:id').put(verifyJWT,verifyEditor,updateArtistByIdController)
 
-router.route('/:id').delete(verifyJWT,verifyAdmin,verifyEditor,deleteArtistByIdController)
+router.route('/:id').delete(verifyJWT,verifyEditor,deleteArtistByIdController)
 
 
 export default router

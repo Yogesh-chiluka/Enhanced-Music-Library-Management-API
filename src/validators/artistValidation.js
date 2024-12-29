@@ -30,10 +30,10 @@ const validateIdField = (artistId) => {
 const validateNameGrammyHidden = (data) => {
 
   const schema = Joi.object({
-    name: Joi.string().required(),
-    grammy: Joi.number().required(),
-    hidden: Joi.boolean().required(),
-  });
+    name: Joi.string().optional(),
+    grammy: Joi.number().optional(),
+    hidden: Joi.boolean().optional(),
+  }).or('name', 'grammy', 'hidden');
 
   return schema.validate(data);
 };

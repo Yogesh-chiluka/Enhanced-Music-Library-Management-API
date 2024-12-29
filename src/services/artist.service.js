@@ -32,7 +32,7 @@ const getAllArtists = async (grammy, hidden, offset, limit) => {
 
     const pipeline = [];
 
-    if (grammy) {
+    if (grammy != null) {
         pipeline.push({
             $match: {
                 grammy: grammy

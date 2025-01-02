@@ -36,36 +36,31 @@ Artists.
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-username/dosemanager-backend.git
+    git clone https://github.com/Yogesh-chiluka/Enhanced-Music-Library-Management-API.git
     ```
 
-2. Navigate to the project directory:
-    ```sh
-    cd dosemanager-backend
-    ```
-
-3. Install the dependencies:
+2. Install the dependencies:
     ```sh
     npm install
     ```
 
-4. Set up environment variables in a `.env` file:
+3. Set up environment variables in a `.env` file:
     ```sh
     MONGO_URI=your_mongodb_uri
     JWT_SECRET=your_jwt_secret
     ```
 
-5. Build the project:
+4. Build the project:
     ```sh
     npm run build
     ```
 
-6. Start the server:
+5. Start the server:
     ```sh
     npm start
     ```
 
-7. For development, use:
+6. For development, use:
     ```sh
     npm run dev
     ```
